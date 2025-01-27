@@ -133,9 +133,20 @@ export default function Page() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredAdvocates.map((advocate) => (
-            <AdvocateCard key={advocate.id} advocate={advocate} />
-          ))}
+          {filteredAdvocates.length > 0 ? (
+            filteredAdvocates.map((advocate) => (
+              <AdvocateCard key={advocate.id} advocate={advocate} />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-8">
+              <p className="text-lg text-gray-600 mb-4">
+                No advocates match your current filters
+              </p>
+              <Button onClick={clearFilters} variant="secondary">
+                Clear All Filters
+              </Button>
+            </div>
+          )}
         </div>
       </main>
     </>
