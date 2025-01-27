@@ -5,8 +5,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Solace Candidate Assignment",
-  description: "Show us what you got",
+  title: "Find Your Care Advocate | Solace",
+  description:
+    "Connect with expert patient advocates who can help you navigate the healthcare system and solve any medical problem, no matter what you need.",
 };
 
 export default function RootLayout({
