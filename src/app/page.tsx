@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import {
 } from "@/types";
 
 export default function Page() {
+  const queryClient = useQueryClient();
   const {
     data: advocates = [],
     isLoading,
@@ -132,22 +133,42 @@ export default function Page() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredAdvocates.length > 0 ? (
-            filteredAdvocates.map((advocate) => (
-              <AdvocateCard key={advocate.id} advocate={advocate} />
-            ))
-          ) : (
-            <div className="col-span-full text-center py-8">
-              <p className="text-lg text-gray-600 mb-4">
-                No advocates match your current filters
-              </p>
-              <Button onClick={clearFilters} variant="secondary">
-                Clear All Filters
-              </Button>
-            </div>
-          )}
-        </div>
+        {isError ? (
+          <div className="text-center py-8">
+            <p className="text-lg text-red-600 mb-4">
+              Sorry, there was an error loading the care advocates.
+            </p>
+            <Button
+              onClick={() => {
+                queryClient.invalidateQueries({ queryKey: ["advocates"] });
+              }}
+              variant="secondary"
+            >
+              Try Again
+            </Button>
+          </div>
+        ) : isLoading ? (
+          <div className="text-center py-8">
+            <p className="text-lg text-gray-600 mb-4">Loading...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredAdvocates.length > 0 ? (
+              filteredAdvocates.map((advocate) => (
+                <AdvocateCard key={advocate.id} advocate={advocate} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-lg text-gray-600 mb-4">
+                  No care advocates match your current filters
+                </p>
+                <Button onClick={clearFilters} variant="secondary">
+                  Clear All Filters
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </main>
     </>
   );
